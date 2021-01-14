@@ -2,32 +2,33 @@
 
 This is a brief description of my solution to https://www.kaggle.com/c/riiid-test-answer-prediction competition.
 
-I am happy that I got into top 7% out of 3395 teams in such a chalenging competition, learning a lot in the process.
+I am happy that I got into top 7% out of 3395 teams in such a challenging competition, learning a lot in the process. \
+My solution is here with all dependencies is here: https://www.kaggle.com/tymurprorochenko/riiid-public-submit \
+Final ROC AUC for local CV is 0.788, public LB is 0.790 and private LB is 0.792.
 
-
-Two aspects made it particularily hard for me:
+Two aspects made it particularly hard for me:
 * Large set of training data (100m rows, multiple tables) that could not be simply processed on kaggles 16gb ram VM;
-* Submission through api with time costraints and a need to update features online made code optimization very important.
+* Submission through api with time constraints and a need to update features online made code optimization very important.
 
 
-#### Preprocessing, with pyspark https://www.kaggle.com/tymurprorochenko/riiid-parquets-v5
+**Preprocessing, with pyspark** https://www.kaggle.com/tymurprorochenko/riiid-parquets-v5
 * Split dataset into 10 parts by users
 * Created "task container id ordered by timestamp" to simulate sequences of questions in the test set.
 * Same splits were further used for training and testing. 
-Such strategy ment that local validation was worse than leaderboard due to higher share of new users who are harder to predict, however the difference was consistent. 
-I decided that undersampling new users for better CV/LB correlation ment added complexity and less samples for training. 
+Such strategy meant that local validation was worse than leaderboard due to higher share of new users who are harder to predict, however the difference was consistent. 
+I decided that under sampling new users for better CV/LB correlation meant added complexity and less samples for training. 
 
-#### Online / Offline features
-* Only user based features are recalculated online
-* All content based statistics was calculated on all of the data, this created small target leakage, however I desided that the time saved was more important.
+**Online / Offline features**
+* Only user-based features are recalculated online
+* All content-based statistics was calculated on all of the data, this created small target leakage, however I decided that the time saved was more important.
 
 
-#### Memory and time management
-* Initialy I lost a lot of time since my initial solution was based on pyspark preprocessing with convertion to pandas. 
+**Memory and time management**
+* Initialy I lost a lot of time since my initial solution was based on pyspark preprocessing with conversion to pandas. 
 In the second iteration I rewrote everything based on cuda dataframes, only to find out that it was still not fast enough.
-Only after I swithched to numpy, my submission time decreased to about one hour.
+Only after I switched to numpy, my submission time decreased to about one hour.
 
-Thus data is stored in numpy arrays for most of the features and in lists of booleans for sequences of last user answers. 
+Thus, data is stored in numpy arrays for most of the features and in lists of booleans for sequences of last user answers. 
 Below is a simplified example of my pipeline:
 
 **Initialize arrays**
@@ -116,11 +117,10 @@ X = pd.DataFrame({
 #### My features
 Apart from common mean encodings, I have created some interesting features that I want to share:
 
-* Calculated content correlation based on user answers, and used this informationtto calculate user based features based on N neighbors from predicted question.\
+* Calculated content correlation based on user answers and used this information to calculate user-based features based on N neighbors from predicted question.\
   https://www.kaggle.com/tymurprorochenko/content-correlation \
   https://www.kaggle.com/tymurprorochenko/content-correlation-100to300 
 
-* Calculated average content answer duration \
-https://www.kaggle.com/tymurprorochenko/question-duration
-
-*
+* Average content answer duration;
+* Question mean based on first user answers;
+* Severity of user mistakes based on how dificult the question is to answer and how common the answer that user gave is;
