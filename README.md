@@ -10,21 +10,19 @@ Two aspects made it particularily hard for me:
 * Submission through api with time costraints and a need to update features online made code optimization very important.
 
 
-### Memory management
-
-Preprocessing, with pyspark https://www.kaggle.com/tymurprorochenko/riiid-parquets-v5
+#### Preprocessing, with pyspark https://www.kaggle.com/tymurprorochenko/riiid-parquets-v5
 * Split dataset into 10 parts by users
 * Created "task container id ordered by timestamp" to simulate sequences of questions in the test set.
 * Same splits were further used for training and testing. 
 Such strategy ment that local validation was worse than leaderboard due to higher share of new users who are harder to predict, however the difference was consistent. 
 I decided that undersampling new users for better CV/LB correlation ment added complexity and less samples for training. 
 
-Online / Offline features
+#### Online / Offline features
 * Only user based features are recalculated online
 * All content based statistics was calculated on all of the data, this created small target leakage, however I desided that the time saved was more important.
 
 
-Memory and time management
+#### Memory and time management
 * Initialy I lost a lot of time since my initial solution was based on pyspark preprocessing with convertion to pandas. 
 In the second iteration I rewrote everything based on cuda dataframes, only to find out that it was still not fast enough.
 Only after I swithched to numpy, my submission time decreased to about one hour.
@@ -115,3 +113,14 @@ X = pd.DataFrame({
   })
 ```
 
+#### My features
+Apart from common mean encodings, I have created some interesting features that I want to share:
+
+* Calculated content correlation based on user answers, and used this informationtto calculate user based features based on N neighbors from predicted question.\
+  https://www.kaggle.com/tymurprorochenko/content-correlation \
+  https://www.kaggle.com/tymurprorochenko/content-correlation-100to300 
+
+* Calculated average content answer duration \
+https://www.kaggle.com/tymurprorochenko/question-duration
+
+*
