@@ -26,8 +26,7 @@ I decided that under sampling new users for better CV/LB correlation meant added
 **Memory and time management**
 * Initialy I lost a lot of time since my initial solution was based on pyspark preprocessing with conversion to pandas. 
 In the second iteration I rewrote everything based on cuda dataframes, only to find out that it was still not fast enough.
-Only after I switched to numpy, my submission time decreased to about one hour.
-
+Only after I switched to numpy, my submission time decreased to about one hour. \
 Thus, data is stored in numpy arrays for most of the features and in lists of booleans for sequences of last user answers. 
 Below is a simplified example of my pipeline:
 
@@ -115,12 +114,12 @@ X = pd.DataFrame({
 ```
 
 #### My features
-Apart from common mean encodings, I have created some interesting features that I want to share:
+Apart from common mean encodings, some features turned out to be different from what most users used, some of them are:
 
 * Calculated content correlation based on user answers and used this information to calculate user-based features based on N neighbors from predicted question.\
   https://www.kaggle.com/tymurprorochenko/content-correlation \
   https://www.kaggle.com/tymurprorochenko/content-correlation-100to300 
-
 * Average content answer duration;
-* Question mean based on first user answers;
+* Question mean based on first only user answers;
 * Severity of user mistakes based on how dificult the question is to answer and how common the answer that user gave is;
+* Mean correctnes for last N user answers and user-part answers;
