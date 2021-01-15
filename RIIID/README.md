@@ -123,3 +123,8 @@ Apart from common mean encodings, some features turned out to be different from 
 * Question mean based on first only user answers;
 * Severity of user mistakes based on how dificult the question is to answer and how common the answer that user gave is;
 * Mean correctnes for last N user answers and user-part answers;
+
+#### Model
+Since my initial pipeline was created for gradient boosting on decision trees, and I did not have the time to add my own SAKT/SAINT model. When choosing between LGBM, XGBoost and CatBoost I stopped on the later one since it natively supported training on Kaggle GPUs, allowing to fit 30x50M numerical dataset at once and training under 1 hour. \
+In the end I used an average of two models trained on 50% of the data each. \
+https://www.kaggle.com/tymurprorochenko/riiid-model
