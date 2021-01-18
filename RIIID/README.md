@@ -3,7 +3,7 @@
 This is a brief description of my solution to https://www.kaggle.com/c/riiid-test-answer-prediction competition.
 
 I am happy that I got into top 7% out of 3395 teams in such a challenging competition, learning a lot in the process. \
-My solution is here with all dependencies is here: https://www.kaggle.com/tymurprorochenko/riiid-public-submit \
+My solution with all dependencies is here: https://www.kaggle.com/tymurprorochenko/riiid-public-submit \
 Final ROC AUC for local CV is 0.788, public LB is 0.790 and private LB is 0.792.
 
 Two aspects made it particularly hard for me:
